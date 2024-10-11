@@ -8,3 +8,6 @@ Some notes about this config:
 - Navigation layer has vim-like arrow keys
 
 ![Temper Keymap](keymap_img/temper.svg)
+
+
+https://github.com/joelspadin/zmk-locale-generator/releases
