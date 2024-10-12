@@ -5,33 +5,38 @@
 #include "layers.h"
 #include "36.h"
 #include "keys_fr.h"
+#include "combos.h"
+#include "macros.h"
 
 &sk {
   release-after-ms = <10000>;
 };
 
+&lt {
+};
+
 &caps_word {
-    continue-list = <UNDERSCORE FR_MINUS>;
+    continue-list = <FR_M UNDERSCORE FR_MINUS BACKSPACE DELETE>;
 };
 
 / {
   behaviors {
-    quotes: quotes {
+    squotes: single_quotes {
       compatible = "zmk,behavior-mod-morph";
       #binding-cells = <0>;
-      bindings = <&kp FR_SINGLE_QUOTE>, <&kp FR_DOUBLE_QUOTES>;
+      bindings = <&kp FR_SINGLE_QUOTE>, <&kp FR_SINGLE_QUOTE>;
       mods = <(MOD_LSFT|MOD_RSFT)>;
     };
-    comma_lower: comma_lower {
+    comma_dot: comma_dot {
       compatible = "zmk,behavior-mod-morph";
       #binding-cells = <0>;
-      bindings = <&kp FR_COMMA>, <&kp FR_LT>;
+      bindings = <&kp FR_COMMA>, <&kp FR_DOT>;
       mods = <(MOD_LSFT|MOD_RSFT)>;
     };
-    dot_upper: dot_upper {
+    colons: colon_semicolon {
       compatible = "zmk,behavior-mod-morph";
       #binding-cells = <0>;
-      bindings = <&kp FR_DOT>, <&kp FR_GT>;
+      bindings = <&kp FR_COLON>, <&kp FR_SEMICOLON>;
       mods = <(MOD_LSFT|MOD_RSFT)>;
     };
     slash_quest: slash_quest {
@@ -59,46 +64,50 @@
     };
   };
 
-  combos {
-    compatible = "zmk,combos";
-
-    #define COMBO(NAME, BINDINGS, KEYPOS, TIMEOUT, LAYERS) \
-    combo_##NAME { \
-      timeout-ms = <TIMEOUT>; \
-      bindings = <BINDINGS>; \
-      key-positions = <KEYPOS>; \
-      layers = <LAYERS>; \
-    };
-
-    COMBO(combo_caps_word,          &caps_word,               LB4 LB3,  35,   ALL_LAYERS)
-    COMBO(combo_l_shift,            &smart_mod LSHIFT LSHIFT, LM4 LM3,  35,   ALL_LAYERS)
-    COMBO(combo_l_ctrl,             &smart_mod LCTRL LCTRL,   LM3 LM2,  35,   ALL_LAYERS)
-    
-    COMBO(combo_left_parenthesis,   &kp FR_LEFT_PARENTHESIS,  RM1 RM2,  25,   ALL_LAYERS)
-    COMBO(combo_right_parenthesis,  &kp FR_RIGHT_PARENTHESIS, RM2 RM3,  25,   ALL_LAYERS)
-    COMBO(combo_left_bracket,       &kp FR_LEFT_BRACKET,      RT1 RT2,  25,   ALL_LAYERS)
-    COMBO(combo_right_bracket,      &kp FR_RIGHT_BRACKET,     RT2 RT3,  25,   ALL_LAYERS)
-    COMBO(combo_left_brace,         &kp FR_LEFT_BRACE,        RB1 RB2,  25,   ALL_LAYERS)
-    COMBO(combo_right_brace,        &kp FR_RIGHT_BRACE,       RB2 RB3,  25,   ALL_LAYERS)
-
-    COMBO(combo_e_acute,            &kp FR_E_ACUTE,           RM2 RT3,  25,   ALL_LAYERS)
-    COMBO(combo_e_grave,            &kp FR_E_GRAVE,           RM2 RT1,  25,   ALL_LAYERS)
-  };
-
   keymap {
     compatible = "zmk,keymap";
 
-    default_layer {
+    base_layer {
       display-name = "colemak";
       bindings = <
 // ╭───────────────┬───────────────┬───────────────┬───────────────┬───────────────╮   ╭───────────────┬───────────────┬───────────────┬───────────────┬───────────────╮
-       &kp FR_Q        &kp FR_W        &kp FR_F        &kp FR_P        &kp FR_B            &kp FR_J        &kp FR_L        &kp FR_U        &kp FR_Y         &quotes
+       &kp FR_Q        &kp FR_W        &kp FR_F        &kp FR_P        &kp FR_B            &kp FR_J        &kp FR_L        &kp FR_U        &kp FR_Y        &squotes
 // ├───────────────┼───────────────┼───────────────┼───────────────┼───────────────┤   ├───────────────┼───────────────┼───────────────┼───────────────┼───────────────┤
        &kp FR_A        &kp FR_R        &kp FR_S        &kp FR_T        &kp FR_G            &kp FR_M        &kp FR_N        &kp FR_E        &kp FR_I        &kp FR_O
 // ├───────────────┼───────────────┼───────────────┼───────────────┼───────────────┤   ├───────────────┼───────────────┼───────────────┼───────────────┼───────────────┤
-       &kp FR_Z        &kp FR_X        &kp FR_C        &kp FR_D        &kp FR_V            &kp FR_K        &kp FR_H      &comma_lower     &dot_upper     &slash_quest
+       &kp FR_Z        &kp FR_X        &kp FR_C        &kp FR_D        &kp FR_V            &kp FR_K        &kp FR_H       &comma_dot        &colons        &slash_quest
 // ╰───────────────┴───────────────┼───────────────┼───────────────┼───────────────┤   ├───────────────┼───────────────┼───────────────┼───────────────┴───────────────╯
-                                       &kp SPACE    &lt L_NAV SPACE  &lt L_NUM TAB          &kp RET        &bspc_del         &kp DEL
+                                       &kp SPACE    &lt L_NAV TAB      &kp SPACE         &lt L_SYM RET     &bspc_del       &kp DEL
+//                                 ╰───────────────┴───────────────┴───────────────╯   ╰───────────────┴───────────────┴───────────────╯ 
+      >;
+    };
+
+    nav_layer {
+      display-name = "nav";
+      bindings = <
+// ╭───────────────┬───────────────┬───────────────┬───────────────┬───────────────╮   ╭───────────────┬───────────────┬───────────────┬───────────────┬───────────────╮
+   &gui_pre FR_AMPS &gui_pre FR_E_E &gui_pre FR_DQT &gui_pre FR_SQT &gui_pre FR_LPAR        &trans          &kp HOME        &kp UP         &kp END          &trans
+// ├───────────────┼───────────────┼───────────────┼───────────────┼───────────────┤   ├───────────────┼───────────────┼───────────────┼───────────────┼───────────────┤
+         &trans      &gui_pre FR_Q   &gui_pre FR_W   &gui_pre FR_X      &trans              &trans          &kp LEFT        &kp DOWN       &kp RIGHT        &trans
+// ├───────────────┼───────────────┼───────────────┼───────────────┼───────────────┤   ├───────────────┼───────────────┼───────────────┼───────────────┼───────────────┤
+         &trans         &trans          &trans          &trans          &trans              &trans          &trans          &trans          &trans          &trans
+// ╰───────────────┴───────────────┼───────────────┼───────────────┼───────────────┤   ├───────────────┼───────────────┼───────────────┼───────────────┴───────────────╯
+                                        &trans          &trans          &trans              &trans          &trans          &trans
+//                                 ╰───────────────┴───────────────┴───────────────╯   ╰───────────────┴───────────────┴───────────────╯
+      >;
+    };
+
+    sym_layer {
+      display-name = "symbols";
+      bindings = <
+// ╭───────────────┬───────────────┬───────────────┬───────────────┬───────────────╮   ╭───────────────┬───────────────┬───────────────┬───────────────┬───────────────╮
+         &trans         &trans          &trans          &trans          &trans              &trans          &trans        &kp FR_HASH       &trans          &trans
+// ├───────────────┼───────────────┼───────────────┼───────────────┼───────────────┤   ├───────────────┼───────────────┼───────────────┼───────────────┼───────────────┤
+         &trans         &trans          &trans          &trans          &trans              &trans        &kp FR_LT    &kp FR_EQUAL      &kp FR_GT        &trans
+// ├───────────────┼───────────────┼───────────────┼───────────────┼───────────────┤   ├───────────────┼───────────────┼───────────────┼───────────────┼───────────────┤
+         &trans         &trans          &trans          &trans          &trans              &trans          &trans          &trans          &trans          &trans
+// ╰───────────────┴───────────────┼───────────────┼───────────────┼───────────────┤   ├───────────────┼───────────────┼───────────────┼───────────────┴───────────────╯
+                                        &trans         &trans          &trans               &trans          &trans          &trans
 //                                 ╰───────────────┴───────────────┴───────────────╯   ╰───────────────┴───────────────┴───────────────╯
       >;
     };
@@ -114,21 +123,6 @@
          &trans         &trans          &trans          &trans          &trans              &trans         &kp FR_N1       &kp FR_N2       &kp FR_N3        &trans
 // ╰───────────────┴───────────────┼───────────────┼───────────────┼───────────────┤   ├───────────────┼───────────────┼───────────────┼───────────────┴───────────────╯
                                         &trans          &trans          &trans              &trans        &kp FR_N0        &kp FR_DOT
-//                                 ╰───────────────┴───────────────┴───────────────╯   ╰───────────────┴───────────────┴───────────────╯
-      >;
-    };
-
-    nav_layer {
-      display-name = "nav";
-      bindings = <
-// ╭───────────────┬───────────────┬───────────────┬───────────────┬───────────────╮   ╭───────────────┬───────────────┬───────────────┬───────────────┬───────────────╮
-         &trans         &trans          &trans          &trans          &trans              &trans          &trans          &trans          &trans          &trans
-// ├───────────────┼───────────────┼───────────────┼───────────────┼───────────────┤   ├───────────────┼───────────────┼───────────────┼───────────────┼───────────────┤
-         &trans         &trans          &trans          &trans          &trans              &trans          &kp LEFT        &kp UP         &kp DOWN        &kp RIGHT
-// ├───────────────┼───────────────┼───────────────┼───────────────┼───────────────┤   ├───────────────┼───────────────┼───────────────┼───────────────┼───────────────┤
-         &trans         &trans          &trans          &trans          &trans              &trans          &trans          &trans          &trans          &trans
-// ╰───────────────┴───────────────┼───────────────┼───────────────┼───────────────┤   ├───────────────┼───────────────┼───────────────┼───────────────┴───────────────╯
-                                        &trans         &trans          &trans               &trans          &trans          &trans
 //                                 ╰───────────────┴───────────────┴───────────────╯   ╰───────────────┴───────────────┴───────────────╯
       >;
     };
