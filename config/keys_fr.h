@@ -353,3 +353,6 @@
 
 /* € */
 #define FR_EURO (RA(ZMK_HID_USAGE(HID_USAGE_KEY, HID_USAGE_KEY_KEYBOARD_E)))
+
+// !|~$^@€²°
+// fn
